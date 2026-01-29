@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart Village Portal</title>
+<style>
+body{
+margin:0;
+font-family:Segoe UI,Arial;
+background: linear-gradient(rgba(230,250,240,0.95),rgba(240,255,245,0.95)), url("https://images.unsplash.com/photo-1503264116251-35a269479413") center/cover fixed;
+color:#043;
+}
+#login,#app{height:100vh;display:flex;align-items:center;justify-content:center}
+#loginBox{
+background:#ffffffee;padding:35px;border-radius:16px;
+box-shadow:0 0 30px rgba(0,0,0,.2);width:420px;text-align:center;
+animation: fadeIn 1s ease-in-out;}
+#loginBox h2{color:#2f8f5b;margin-bottom:15px;}
+input,select,button{
+width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #7fbf9a;font-size:15px}
+button{background: linear-gradient(90deg,#4caf50,#2f8f5b);color:#fff;font-weight:bold;cursor:pointer;transition:.3s}
+button:hover{background: linear-gradient(90deg,#2f8f5b,#4caf50);}
+#loginBox p.info{font-size:13px;color:#555;margin-top:10px;text-align:left}
+#app{width:100%;flex-direction:row;}
+#side{width:220px;background:#f2fff2;padding:15px;box-shadow:2px 0 10px rgba(0,0,0,.1);}
+#side button{width:100%;margin:6px 0;font-weight:bold;cursor:pointer;}
+#main{flex:1;padding:20px;overflow-y:auto;}
+.card{background:#ffffffdd;padding:15px;border-radius:12px;margin:15px 0;box-shadow:0 0 15px rgba(0,0,0,.1);}
+.card img{width:100%;border-radius:12px;margin-top:8px;}
+.card h3{margin:10px 0 5px 0;color:#2f8f5b;}
+.card p{margin:0 0 5px 0;color:#555;}
+input[type=number]{width:80px;}
+.flex-row{display:flex;align-items:center;gap:12px;}
+table{border-collapse:collapse;width:100%;margin-top:10px;}
+th,td{border:1px solid #888;padding:8px;text-align:left;}
+th{background:#2f8f5b;color:#fff;}
+@keyframes fadeIn{0%{opacity:0;transform:translateY(-30px);}100%{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+<div id="loginBox">
+<h2>🌿 Smart Village Portal</h2>
+<input id="uid" placeholder="User ID">
+<input id="email" type="email" placeholder="Email (optional)">
+<input id="pwd" type="password" placeholder="Password">
+<select id="role">
+  <option value="">Select Role</option>
+  <option value="village">Village Admin</option>
+  <option value="control">Control Admin</option>
+</select>
+<button id="loginBtn">Login</button>
+
+<p class="info">
+<b>Village Admin:</b> hingna_admin / pass@123<br>
+<b>Control Admin:</b> control_admin / control@123<br>
+<small>Email optional, just for reference</small>
+</p>
+</div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;">
+<div id="side"></div>
+<div id="main"></div>
+</div>
+
+<script>
+// DOM elements
+const main=document.getElementById("main");
+const side=document.getElementById("side");
+const login=document.getElementById("login");
+const uid=document.getElementById("uid");
+const pwd=document.getElementById("pwd");
+const email=document.getElementById("email");
+const role=document.getElementById("role");
+
+// Login button
+document.getElementById("loginBtn").addEventListener("click", ()=>{
+  const u=uid.value.trim();
+  const p=pwd.value.trim();
+  const r=role.value;
+
+  if(!u||!p||!r){alert("Please fill User ID, Password and Role!"); return;}
+
+  if(r==="village" && u==="hingna_admin" && p==="pass@123"){
+    login.style.display="none"; loadVillage();
+  }
+  else if(r==="control" && u==="control_admin" && p==="control@123"){
+    login.style.display="none"; loadControl();
+  }
+  else{alert("❌ Invalid Credentials");}
+});
+
+// Dummy village data
+let villageData={
+name:"Mauda",
+location:"Nagpur West",
+before:"https://images.unsplash.com/photo-1605045580949-9f9f8aa4c0b5?crop=entropy&cs=tinysrgb&fit=max&h=300&w=400",
+after:"https://images.unsplash.com/photo-1581090465143-0e7f8f160b14?crop=entropy&cs=tinysrgb&fit=max&h=300&w=400",
+monuments:[
+{img:"https://upload.wikimedia.org/wikipedia/commons/4/41/NTPC_Mauda.jpg", name:"NTPC Mauda"},
+{img:"https://upload.wikimedia.org/wikipedia/commons/2/28/Chhatrapati_Shivaji_Statue.jpg", name:"Chhatrapati Shivaji Statue"}
+],
+map:"https://maps.google.com/maps?q=Nagpur+Mauda&output=embed",
+wasteData:[
+{type:"Dry", amount:5},
+{type:"Wet", amount:8},
+{type:"E-Waste", amount:10},
+{type:"Harmful", amount:2}
+],
+fundData:[
+{year:"2018-19", fund:100000, waste:20},
+{year:"2019-20", fund:110000, waste:22},
+{year:"2020-21", fund:125000, waste:23},
+{year:"2021-22", fund:140000, waste:24},
+{year:"2022-23", fund:160000, waste:25}
+]
+};
+
+// Multiple villages dummy for Control Admin
+let villages=[
+{name:"Mauda", fund:160000, totalWaste:25, lastUpdate:"2026-01-28"},
+{name:"Hingna", fund:140000, totalWaste:23, lastUpdate:"2026-01-27"},
+{name:"Bhutibori", fund:120000, totalWaste:20, lastUpdate:"2026-01-26"}
+];
+
+// Village Dashboard
+function loadVillage(){
+document.getElementById("app").style.display="flex";
+side.innerHTML=`<h2>🏡 Village Dashboard</h2>
+<button onclick="showOverview()">Overview</button>
+<button onclick="showWaste()">Waste Details</button>
+<button onclick="showFund()">Village Fund</button>
+<button onclick="showHistory()">History</button>
+<button onclick="showEmergency()">Emergency</button>
+<button onclick="showMap()">Map & Monuments</button>
+<button onclick="location.reload()">Logout</button>`;
+showOverview();
+}
+
+// Control Dashboard
+function loadControl(){
+document.getElementById("app").style.display="flex";
+side.innerHTML=`<h2>🧑‍💼 Control Admin</h2>
+<button onclick="showControlOverview()">Overview</button>
+<button onclick="showAllVillages()">All Villages</button>
+<button onclick="showEmergencySummary()">Emergency Summary</button>
+<button onclick="showGraphs()">Graphs</button>
+<button onclick="showAdminProfile()">My Profile</button>
+<button onclick="location.reload()">Logout</button>`;
+main.innerHTML="<h2>Welcome Control Admin</h2>";
+}
+
+// Village Screens
+function showOverview(){
+main.innerHTML=`
+<div class="card">
+<h3>${villageData.name} Overview</h3>
+<p>Location: ${villageData.location}</p>
+<img src="${villageData.before}" alt="Before Cleanup">
+<img src="${villageData.after}" alt="After Cleanup">
+</div>`;
+}
+
+function showWaste(){
+let wasteHtml=villageData.wasteData.map(w=>`<p>${w.type}: ${w.amount} tons</p>`).join("");
+let inputHtml=villageData.wasteData.map((w,i)=>`<div class="flex-row">${w.type}: <input type="number" min="0" value="${w.amount}" id="w${i}"> tons</div>`).join("");
+main.innerHTML=`
+<div class="card">
+<h3>Waste Generation (Monthly)</h3>
+${wasteHtml}
+<h4>Update Waste Data:</h4>
+${inputHtml}
+<button onclick="updateWaste()">Update</button>
+<p>Total: <span id="totalWaste">${villageData.wasteData.reduce((a,b)=>a+b.amount,0)}</span> tons</p>
+</div>`;
+}
+
+function updateWaste(){
+villageData.wasteData.forEach((w,i)=>{w.amount=Number(document.getElementById(`w${i}`).value)});
+document.getElementById("totalWaste").innerText=villageData.wasteData.reduce((a,b)=>a+b.amount,0);
+alert("✅ Waste data updated");
+showWaste();
+}
+
+function showFund(){
+let fundHtml=villageData.fundData.map(f=>`<p>${f.year}: ₹${f.fund.toLocaleString()}, Waste: ${f.waste} tons</p>`).join("");
+main.innerHTML=`
+<div class="card">
+<h3>Village Fund Details</h3>
+<p>Current Fund: ₹${villageData.fundData[villageData.fundData.length-1].fund.toLocaleString()}</p>
+<p>Last 5 Year Fund Growth:</p>
+${fundHtml}
+</div>`;
+}
+
+function showHistory(){
+main.innerHTML=`
+<div class="card">
+<h3>Waste & Fund History</h3>
+${villageData.fundData.map(f=>`<p>${f.year}: Fund ₹${f.fund.toLocaleString()}, Waste ${f.waste} tons</p>`).join("")}
+</div>`;
+}
+
+function showEmergency(){
+main.innerHTML=`
+<div class="card">
+<h3>Emergency Contacts</h3>
+<p>Fire Dept: 101</p>
+<p>Police: 100</p>
+<p>Ambulance: 102</p>
+<p>Environment Helpline: 1800-123-456</p>
+</div>`;
+}
+
+function showMap(){
+let monumentHtml=villageData.monuments.map(m=>`<div class="card"><img src="${m.img}" alt="${m.name}"><p>${m.name}</p></div>`).join("");
+main.innerHTML=`
+<div class="card">
+<h3>Map & Monuments</h3>
+<iframe src="${villageData.map}" width="100%" height="300" style="border:0;"></iframe>
+</div>
+${monumentHtml}`;
+}
+
+// Control Admin Screens
+function showControlOverview(){
+main.innerHTML=`<h3>Welcome Control Admin</h3>
+<p>Total Villages Managed: ${villages.length}</p>
+<p>System Status: All Operational</p>`;
+}
+
+function showAllVillages(){
+let html="<h3>All Villages</h3><table><tr><th>Name</th><th>Fund</th><th>Total Waste</th><th>Last Update</th></tr>";
+villages.forEach(v=>{html+=`<tr><td>${v.name}</td><td>₹${v.fund.toLocaleString()}</td><td>${v.totalWaste} tons</td><td>${v.lastUpdate}</td></tr>`});
+html+="</table>";
+main.innerHTML=html;
+}
+
+function showEmergencySummary(){
+main.innerHTML=`<h3>Emergency Summary</h3><p>No recent emergency reported</p>`; // dummy
+}
+
+function showGraphs(){
+main.innerHTML=`<h3>Graphs</h3><p>Charts placeholder (can integrate Chart.js or similar)</p>`;
+}
+
+function showAdminProfile(){
+main.innerHTML=`<h3>Control Admin Profile</h3>
+<p>ID: control_admin</p>
+<p>Email: control@villageportal.com</p>
+<p>Last Login: 2026-01-29</p>
+<p>Managed Villages: ${villages.length}</p>`;
+}
+
+</script>
+</body>
+</html>
