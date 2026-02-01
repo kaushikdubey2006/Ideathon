@@ -2,260 +2,403 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Smart Village Portal</title>
+<title>EcoCycle | Waste to Value Marketplace</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
+*{box-sizing:border-box}
 body{
-margin:0;
-font-family:Segoe UI,Arial;
-background: linear-gradient(rgba(230,250,240,0.95),rgba(240,255,245,0.95)), url("https://images.unsplash.com/photo-1503264116251-35a269479413") center/cover fixed;
-color:#043;
+  margin:0;
+  font-family:'Segoe UI',Arial;
+  background:#eef4f2;
+  color:#222;
 }
-#login,#app{height:100vh;display:flex;align-items:center;justify-content:center}
-#loginBox{
-background:#ffffffee;padding:35px;border-radius:16px;
-box-shadow:0 0 30px rgba(0,0,0,.2);width:420px;text-align:center;
-animation: fadeIn 1s ease-in-out;}
-#loginBox h2{color:#2f8f5b;margin-bottom:15px;}
-input,select,button{
-width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #7fbf9a;font-size:15px}
-button{background: linear-gradient(90deg,#4caf50,#2f8f5b);color:#fff;font-weight:bold;cursor:pointer;transition:.3s}
-button:hover{background: linear-gradient(90deg,#2f8f5b,#4caf50);}
-#loginBox p.info{font-size:13px;color:#555;margin-top:10px;text-align:left}
-#app{width:100%;flex-direction:row;}
-#side{width:220px;background:#f2fff2;padding:15px;box-shadow:2px 0 10px rgba(0,0,0,.1);}
-#side button{width:100%;margin:6px 0;font-weight:bold;cursor:pointer;}
-#main{flex:1;padding:20px;overflow-y:auto;}
-.card{background:#ffffffdd;padding:15px;border-radius:12px;margin:15px 0;box-shadow:0 0 15px rgba(0,0,0,.1);}
-.card img{width:100%;border-radius:12px;margin-top:8px;}
-.card h3{margin:10px 0 5px 0;color:#2f8f5b;}
-.card p{margin:0 0 5px 0;color:#555;}
-input[type=number]{width:80px;}
-.flex-row{display:flex;align-items:center;gap:12px;}
-table{border-collapse:collapse;width:100%;margin-top:10px;}
-th,td{border:1px solid #888;padding:8px;text-align:left;}
-th{background:#2f8f5b;color:#fff;}
-@keyframes fadeIn{0%{opacity:0;transform:translateY(-30px);}100%{opacity:1;transform:translateY(0);}}
+.hidden{display:none}
+
+/* HEADER */
+header{
+  background:linear-gradient(120deg,#1e7f5c,#2ecc71);
+  color:white;
+  padding:18px 24px;
+  display:flex;
+  align-items:center;
+}
+header i{font-size:26px;cursor:pointer;margin-right:16px}
+
+/* MENU */
+.menu{
+  position:fixed;
+  top:0; left:-340px;
+  width:340px; height:100%;
+  background:#145a42;
+  color:white;
+  padding:28px;
+  transition:.3s;
+  overflow:auto;
+  z-index:1000;
+}
+.menu a{
+  display:block;
+  margin:18px 0;
+  color:white;
+  font-size:17px;
+  text-decoration:none;
+  cursor:pointer;
+}
+.menu a i{margin-right:10px}
+
+/* SEARCH */
+.top-bar{
+  background:#dff1ea;
+  padding:14px;
+  display:flex;
+  gap:12px;
+}
+.top-bar input,.top-bar select{
+  flex:1;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+/* SCREENS */
+.screen{padding:30px}
+
+/* HERO */
+.hero{
+  background:linear-gradient(120deg,#1e7f5c,#38c172);
+  color:white;
+  padding:40px;
+  border-radius:20px;
+  margin-bottom:35px;
+}
+.hero-stats{
+  display:flex;gap:25px;margin-top:20px;flex-wrap:wrap
+}
+.hero-stats div{
+  background:rgba(255,255,255,.18);
+  padding:16px 22px;
+  border-radius:14px;
+  text-align:center;
+}
+
+/* PRODUCTS */
+.products{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  gap:24px;
+}
+.card{
+  background:white;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 6px 18px rgba(0,0,0,.14);
+}
+.card img{width:100%;height:180px;object-fit:cover}
+.card-body{padding:16px}
+.price{font-weight:bold;font-size:18px}
+.rating{color:#f5b301}
+.seller{font-size:13px;color:#555}
+.verified{
+  display:inline-block;
+  background:#e8fff1;
+  color:#1e7f5c;
+  padding:4px 10px;
+  border-radius:12px;
+  font-size:12px;
+  margin-top:6px;
+}
+
+/* BUTTON */
+button{
+  width:100%;
+  padding:12px;
+  background:#1e7f5c;
+  color:white;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* FORMS */
+input,textarea,select{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+/* MISC */
+.ticket{
+  background:#f5f5f5;
+  padding:14px;
+  border-radius:10px;
+  margin:10px 0;
+}
+.summary{
+  background:#f6f6f6;
+  padding:18px;
+  border-radius:12px;
+}
 </style>
 </head>
+
 <body>
 
-<!-- LOGIN -->
-<div id="login">
-<div id="loginBox">
-<h2>🌿 Smart Village Portal</h2>
-<input id="uid" placeholder="User ID">
-<input id="email" type="email" placeholder="Email (optional)">
-<input id="pwd" type="password" placeholder="Password">
-<select id="role">
-  <option value="">Select Role</option>
-  <option value="village">Village Admin</option>
-  <option value="control">Control Admin</option>
-</select>
-<button id="loginBtn">Login</button>
+<header>
+  <i class="fa fa-bars" onclick="toggleMenu()"></i>
+  <h1>EcoCycle ♻</h1>
+</header>
 
-<p class="info">
-<b>Village Admin:</b> hingna_admin / pass@123<br>
-<b>Control Admin:</b> control_admin / control@123<br>
-<small>Email optional, just for reference</small>
-</p>
-</div>
+<div class="menu" id="menu">
+  <a onclick="openScreen('home')"><i class="fa fa-store"></i>Marketplace</a>
+  <a onclick="openScreen('sellerProfiles')"><i class="fa fa-users"></i>Seller Profiles</a>
+  <a onclick="openScreen('sell')"><i class="fa fa-plus"></i>Sell Product</a>
+  <a onclick="openScreen('about')"><i class="fa fa-circle-info"></i>About Platform</a>
+  <a onclick="openScreen('backend')"><i class="fa fa-diagram-project"></i>Backend & System</a>
+  <a onclick="openScreen('support')"><i class="fa fa-headset"></i>Customer Care</a>
+  <a onclick="openScreen('policy')"><i class="fa fa-shield"></i>Seller Policy</a>
 </div>
 
-<!-- APP -->
-<div id="app" style="display:none;">
-<div id="side"></div>
-<div id="main"></div>
+<div class="top-bar">
+  <input id="search" placeholder="Search product / seller / city">
+  <select id="cityFilter">
+    <option value="">All Cities</option>
+    <option>Nagpur</option><option>Pune</option>
+    <option>Mumbai</option><option>Delhi</option><option>Indore</option>
+  </select>
+</div>
+
+<!-- HOME -->
+<div id="home" class="screen">
+  <div class="hero">
+    <h2>Turning Small Plastic Waste into Valuable Products</h2>
+    <p>EcoCycle aggregates ignored plastic waste and converts it into useful products.</p>
+    <div class="hero-stats">
+      <div><b>128+ kg</b><br>Plastic Recycled</div>
+      <div><b>210+ kg</b><br>CO₂ Reduced</div>
+      <div><b>42+</b><br>Verified Sellers</div>
+      <div><b>30+</b><br>Eco Products</div>
+    </div>
+  </div>
+  <div class="products" id="productGrid"></div>
+</div>
+
+<!-- SELLER PROFILES -->
+<div id="sellerProfiles" class="screen hidden">
+  <h2>Seller Profiles</h2>
+  <input id="sellerSearch" placeholder="Search seller..." oninput="renderSellerList()">
+  <div id="sellerList"></div>
+</div>
+
+<!-- SELLER DASHBOARD -->
+<div id="sellerDashboard" class="screen hidden">
+  <h2 id="sellerTitle"></h2>
+  <div id="sellerProducts"></div>
+</div>
+
+<!-- SELL PRODUCT -->
+<div id="sell" class="screen hidden">
+  <h2>Add New Product</h2>
+  <input id="sname" placeholder="Seller Name">
+  <input id="scity" placeholder="City">
+  <input id="pname" placeholder="Product Name">
+  <input id="pprice" placeholder="Price">
+  <input id="pqty" placeholder="Quantity">
+  <input id="pimg" placeholder="Image URL">
+  <textarea id="pdesc" placeholder="Product Description"></textarea>
+  <button onclick="addProduct()">Submit Product</button>
+</div>
+
+<!-- BUY FLOW -->
+<div id="buyDetails" class="screen hidden">
+  <h2>Delivery Details</h2>
+  <input id="buyerName" placeholder="Full Name">
+  <input id="buyerPhone" placeholder="Phone Number">
+  <textarea id="buyerAddress" placeholder="Delivery Address"></textarea>
+  <button onclick="goPayment()">Continue to Payment</button>
+</div>
+
+<div id="payment" class="screen hidden">
+  <h2>Payment Method</h2>
+  <select id="paymentMode">
+    <option>Cash on Delivery</option>
+    <option>UPI</option>
+    <option>Card</option>
+    <option>EMI</option>
+  </select>
+  <button onclick="confirmOrder()">Confirm Order</button>
+</div>
+
+<div id="confirmation" class="screen hidden">
+  <h2>Order Confirmed ✅</h2>
+  <div id="orderSummary" class="summary"></div>
+</div>
+
+<!-- ABOUT -->
+<div id="about" class="screen hidden">
+  <h2>About EcoCycle</h2>
+  <p>EcoCycle focuses on converting ignored plastic waste into economic value.</p>
+  <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789" width="100%">
+</div>
+
+<!-- BACKEND -->
+<div id="backend" class="screen hidden">
+  <h2>Backend & System Flow</h2>
+  <p>Collection → Verification → Recycling → Manufacturing → Marketplace → Delivery</p>
+  <img src="https://images.unsplash.com/photo-1581090700227-1e37b190418e" width="100%">
+</div>
+
+<!-- SUPPORT -->
+<div id="support" class="screen hidden">
+  <h2>Customer Care</h2>
+  <p>Email: support@ecocycle.in<br>Phone: +91-98765-43210</p>
+  <div class="ticket">Ticket #EC1023 – Resolved</div>
+</div>
+
+<!-- POLICY -->
+<div id="policy" class="screen hidden">
+  <h2>Seller Policy</h2>
+  <ul>
+    <li>Only verified dry-waste-based products allowed</li>
+    <li>Fake listings → Permanent Ban</li>
+    <li>Mandatory quality audits</li>
+  </ul>
 </div>
 
 <script>
-// DOM elements
-const main=document.getElementById("main");
-const side=document.getElementById("side");
-const login=document.getElementById("login");
-const uid=document.getElementById("uid");
-const pwd=document.getElementById("pwd");
-const email=document.getElementById("email");
-const role=document.getElementById("role");
+const screens=document.querySelectorAll(".screen");
+const productGrid=document.getElementById("productGrid");
+const sellerList=document.getElementById("sellerList");
+const sellerProducts=document.getElementById("sellerProducts");
 
-// Login button
-document.getElementById("loginBtn").addEventListener("click", ()=>{
-  const u=uid.value.trim();
-  const p=pwd.value.trim();
-  const r=role.value;
+let selectedProduct=null;
+let products=JSON.parse(localStorage.getItem("products"))||[];
 
-  if(!u||!p||!r){alert("Please fill User ID, Password and Role!"); return;}
-
-  if(r==="village" && u==="hingna_admin" && p==="pass@123"){
-    login.style.display="none"; loadVillage();
+/* INIT DATA */
+if(products.length===0){
+  for(let i=1;i<=30;i++){
+    products.push({
+      n:"Eco Product "+i,
+      p:300+i*15,
+      qty:20,
+      s:"GreenSeller"+(i%5+1),
+      city:["Nagpur","Pune","Mumbai","Delhi","Indore"][i%5],
+      i:"https://picsum.photos/400/300?random="+i,
+      d:"Made from recycled plastic waste"
+    });
   }
-  else if(r==="control" && u==="control_admin" && p==="control@123"){
-    login.style.display="none"; loadControl();
-  }
-  else{alert("❌ Invalid Credentials");}
-});
+  localStorage.setItem("products",JSON.stringify(products));
+}
 
-// Dummy village data
-let villageData={
-name:"Mauda",
-location:"Nagpur West",
-before:"https://images.unsplash.com/photo-1605045580949-9f9f8aa4c0b5?crop=entropy&cs=tinysrgb&fit=max&h=300&w=400",
-after:"https://images.unsplash.com/photo-1581090465143-0e7f8f160b14?crop=entropy&cs=tinysrgb&fit=max&h=300&w=400",
-monuments:[
-{img:"https://upload.wikimedia.org/wikipedia/commons/4/41/NTPC_Mauda.jpg", name:"NTPC Mauda"},
-{img:"https://upload.wikimedia.org/wikipedia/commons/2/28/Chhatrapati_Shivaji_Statue.jpg", name:"Chhatrapati Shivaji Statue"}
-],
-map:"https://maps.google.com/maps?q=Nagpur+Mauda&output=embed",
-wasteData:[
-{type:"Dry", amount:5},
-{type:"Wet", amount:8},
-{type:"E-Waste", amount:10},
-{type:"Harmful", amount:2}
-],
-fundData:[
-{year:"2018-19", fund:100000, waste:20},
-{year:"2019-20", fund:110000, waste:22},
-{year:"2020-21", fund:125000, waste:23},
-{year:"2021-22", fund:140000, waste:24},
-{year:"2022-23", fund:160000, waste:25}
-]
+function save(){localStorage.setItem("products",JSON.stringify(products));}
+
+function openScreen(id){
+  screens.forEach(s=>s.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+  menu.style.left="-340px";
+}
+function toggleMenu(){
+  menu.style.left = menu.style.left==="0px"?"-340px":"0px";
+}
+
+/* PRODUCTS */
+function renderProducts(list=products){
+  productGrid.innerHTML="";
+  list.forEach((p,i)=>{
+    productGrid.innerHTML+=`
+    <div class="card">
+      <img src="${p.i}">
+      <div class="card-body">
+        <h4>${p.n}</h4>
+        <p>${p.d}</p>
+        <div class="rating">⭐⭐⭐⭐☆</div>
+        <div class="price">₹${p.p}</div>
+        <div class="seller">${p.s}, ${p.city}</div>
+        <span class="verified">✔ Verified Seller</span>
+        <button onclick="buyProduct(${i})">Buy</button>
+      </div>
+    </div>`;
+  });
+}
+
+/* SEARCH */
+search.oninput=cityFilter.onchange=()=>{
+  const v=search.value.toLowerCase();
+  const c=cityFilter.value;
+  renderProducts(products.filter(p=>
+    (p.n+p.s+p.city).toLowerCase().includes(v) &&
+    (c===""||p.city===c)
+  ));
 };
 
-// Multiple villages dummy for Control Admin
-let villages=[
-{name:"Mauda", fund:160000, totalWaste:25, lastUpdate:"2026-01-28"},
-{name:"Hingna", fund:140000, totalWaste:23, lastUpdate:"2026-01-27"},
-{name:"Bhutibori", fund:120000, totalWaste:20, lastUpdate:"2026-01-26"}
-];
-
-// Village Dashboard
-function loadVillage(){
-document.getElementById("app").style.display="flex";
-side.innerHTML=`<h2>🏡 Village Dashboard</h2>
-<button onclick="showOverview()">Overview</button>
-<button onclick="showWaste()">Waste Details</button>
-<button onclick="showFund()">Village Fund</button>
-<button onclick="showHistory()">History</button>
-<button onclick="showEmergency()">Emergency</button>
-<button onclick="showMap()">Map & Monuments</button>
-<button onclick="location.reload()">Logout</button>`;
-showOverview();
+/* SELLERS */
+function renderSellerList(){
+  sellerList.innerHTML="";
+  [...new Set(products.map(p=>p.s))].forEach(s=>{
+    sellerList.innerHTML+=`
+    <div class="ticket">
+      <b>${s}</b>
+      <button onclick="openSellerProfile('${s}')">View Profile</button>
+    </div>`;
+  });
+}
+function openSellerProfile(name){
+  openScreen("sellerDashboard");
+  sellerTitle.innerText=name;
+  sellerProducts.innerHTML="";
+  products.filter(p=>p.s===name).forEach(p=>{
+    sellerProducts.innerHTML+=`
+    <div class="ticket">
+      <b>${p.n}</b><br>
+      Price <input value="${p.p}" onchange="p.p=this.value;save();renderProducts()"><br>
+      Qty <input value="${p.qty}" onchange="p.qty=this.value;save();renderProducts()">
+    </div>`;
+  });
 }
 
-// Control Dashboard
-function loadControl(){
-document.getElementById("app").style.display="flex";
-side.innerHTML=`<h2>🧑‍💼 Control Admin</h2>
-<button onclick="showControlOverview()">Overview</button>
-<button onclick="showAllVillages()">All Villages</button>
-<button onclick="showEmergencySummary()">Emergency Summary</button>
-<button onclick="showGraphs()">Graphs</button>
-<button onclick="showAdminProfile()">My Profile</button>
-<button onclick="location.reload()">Logout</button>`;
-main.innerHTML="<h2>Welcome Control Admin</h2>";
+/* SELL */
+function addProduct(){
+  products.unshift({
+    n:pname.value,p:+pprice.value,qty:+pqty.value,
+    s:sname.value,city:scity.value,
+    i:pimg.value,d:pdesc.value
+  });
+  save();
+  renderProducts();
+  openScreen("home");
 }
 
-// Village Screens
-function showOverview(){
-main.innerHTML=`
-<div class="card">
-<h3>${villageData.name} Overview</h3>
-<p>Location: ${villageData.location}</p>
-<img src="${villageData.before}" alt="Before Cleanup">
-<img src="${villageData.after}" alt="After Cleanup">
-</div>`;
+/* BUY FLOW */
+function buyProduct(i){
+  selectedProduct=products[i];
+  openScreen("buyDetails");
+}
+function goPayment(){
+  if(!buyerName.value||!buyerPhone.value||!buyerAddress.value){
+    alert("Please fill all details");return;
+  }
+  openScreen("payment");
+}
+function confirmOrder(){
+  orderSummary.innerHTML=`
+  <b>Product:</b> ${selectedProduct.n}<br>
+  <b>Price:</b> ₹${selectedProduct.p}<br>
+  <b>Name:</b> ${buyerName.value}<br>
+  <b>Phone:</b> ${buyerPhone.value}<br>
+  <b>Payment:</b> ${paymentMode.value}<br>
+  <b>Delivery:</b> 3–5 Working Days`;
+  openScreen("confirmation");
 }
 
-function showWaste(){
-let wasteHtml=villageData.wasteData.map(w=>`<p>${w.type}: ${w.amount} tons</p>`).join("");
-let inputHtml=villageData.wasteData.map((w,i)=>`<div class="flex-row">${w.type}: <input type="number" min="0" value="${w.amount}" id="w${i}"> tons</div>`).join("");
-main.innerHTML=`
-<div class="card">
-<h3>Waste Generation (Monthly)</h3>
-${wasteHtml}
-<h4>Update Waste Data:</h4>
-${inputHtml}
-<button onclick="updateWaste()">Update</button>
-<p>Total: <span id="totalWaste">${villageData.wasteData.reduce((a,b)=>a+b.amount,0)}</span> tons</p>
-</div>`;
-}
-
-function updateWaste(){
-villageData.wasteData.forEach((w,i)=>{w.amount=Number(document.getElementById(`w${i}`).value)});
-document.getElementById("totalWaste").innerText=villageData.wasteData.reduce((a,b)=>a+b.amount,0);
-alert("✅ Waste data updated");
-showWaste();
-}
-
-function showFund(){
-let fundHtml=villageData.fundData.map(f=>`<p>${f.year}: ₹${f.fund.toLocaleString()}, Waste: ${f.waste} tons</p>`).join("");
-main.innerHTML=`
-<div class="card">
-<h3>Village Fund Details</h3>
-<p>Current Fund: ₹${villageData.fundData[villageData.fundData.length-1].fund.toLocaleString()}</p>
-<p>Last 5 Year Fund Growth:</p>
-${fundHtml}
-</div>`;
-}
-
-function showHistory(){
-main.innerHTML=`
-<div class="card">
-<h3>Waste & Fund History</h3>
-${villageData.fundData.map(f=>`<p>${f.year}: Fund ₹${f.fund.toLocaleString()}, Waste ${f.waste} tons</p>`).join("")}
-</div>`;
-}
-
-function showEmergency(){
-main.innerHTML=`
-<div class="card">
-<h3>Emergency Contacts</h3>
-<p>Fire Dept: 101</p>
-<p>Police: 100</p>
-<p>Ambulance: 102</p>
-<p>Environment Helpline: 1800-123-456</p>
-</div>`;
-}
-
-function showMap(){
-let monumentHtml=villageData.monuments.map(m=>`<div class="card"><img src="${m.img}" alt="${m.name}"><p>${m.name}</p></div>`).join("");
-main.innerHTML=`
-<div class="card">
-<h3>Map & Monuments</h3>
-<iframe src="${villageData.map}" width="100%" height="300" style="border:0;"></iframe>
-</div>
-${monumentHtml}`;
-}
-
-// Control Admin Screens
-function showControlOverview(){
-main.innerHTML=`<h3>Welcome Control Admin</h3>
-<p>Total Villages Managed: ${villages.length}</p>
-<p>System Status: All Operational</p>`;
-}
-
-function showAllVillages(){
-let html="<h3>All Villages</h3><table><tr><th>Name</th><th>Fund</th><th>Total Waste</th><th>Last Update</th></tr>";
-villages.forEach(v=>{html+=`<tr><td>${v.name}</td><td>₹${v.fund.toLocaleString()}</td><td>${v.totalWaste} tons</td><td>${v.lastUpdate}</td></tr>`});
-html+="</table>";
-main.innerHTML=html;
-}
-
-function showEmergencySummary(){
-main.innerHTML=`<h3>Emergency Summary</h3><p>No recent emergency reported</p>`; // dummy
-}
-
-function showGraphs(){
-main.innerHTML=`<h3>Graphs</h3><p>Charts placeholder (can integrate Chart.js or similar)</p>`;
-}
-
-function showAdminProfile(){
-main.innerHTML=`<h3>Control Admin Profile</h3>
-<p>ID: control_admin</p>
-<p>Email: control@villageportal.com</p>
-<p>Last Login: 2026-01-29</p>
-<p>Managed Villages: ${villages.length}</p>`;
-}
-
+/* INIT */
+renderProducts();
+renderSellerList();
+openScreen("home");
 </script>
+
 </body>
 </html>
